@@ -5,7 +5,7 @@ from utils.trainer import *
 import torch
 
 
-def multiple_runs(experiment_description, n_runs, n_epochs, 
+def multiple_runs(experiment_description = "", n_runs = 1, n_epochs = 5, 
       model_args = dict(), data_args = dict(), optimizer_args = dict()):
 
   from tqdm import tqdm
