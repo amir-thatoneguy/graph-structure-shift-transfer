@@ -20,10 +20,10 @@ class TransferDatasetExperiment():
     self.tgt_data = None
     self.data_args = None
 
-    self.create_dataloaders()
+    self.create_dataloaders(data_args)
 
 
-  def create_dataloaders(self):
+  def create_dataloaders(self, data_args = dict()):
     match self.description:
       case 'sbm':
         src_data, tgt_data = create_transfer_symmetric_sbm_datasets(**data_args)
