@@ -5,7 +5,8 @@ from utils.trainer import *
 import torch
 
 
-def multiple_runs(experiment_description, n_runs, epochs, model_args = dict(), data_args = dict(), optimizer_args = dict()):
+def multiple_runs(experiment_description, n_runs, n_epochs, 
+      model_args = dict(), data_args = dict(), optimizer_args = dict()):
 
   from tqdm import tqdm
   runs_losses = []
@@ -28,8 +29,10 @@ def multiple_runs(experiment_description, n_runs, epochs, model_args = dict(), d
     optimizer = torch.optim.Adam(model.parameters(), **optimizer_args)
     criterion = torch.nn.CrossEntropyLoss()
 
+
     # training loop
-    trainer = Trainer(device, model, data_src, data_tgt, optimizer, criterion, epochs, log_epochs = False)
+    trainer = Trainer(device, model, data_src, data_tgt, optimizer, 
+        criterion, log_epochs = False)
     trainer.train(epochs = n_epochs)
     runs_losses.append(trainer.losses)
 
