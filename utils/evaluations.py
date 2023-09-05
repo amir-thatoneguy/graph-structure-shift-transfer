@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-from .utils.datasets import create_description_from_probs
+from .datasets import create_description_from_probs
 sns.set_theme(style = 'darkgrid')
 
 
