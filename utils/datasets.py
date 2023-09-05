@@ -18,15 +18,15 @@ class TransferDatasetExperiment():
 
     self.src_data = None
     self.tgt_data = None
-    self.data_args = None
+    self.data_args = data_args
 
-    self.create_dataloaders(data_args)
+    self.create_dataloaders()
 
 
-  def create_dataloaders(self, data_args = dict()):
+  def create_dataloaders(self):
     match self.description:
       case 'sbm':
-        src_data, tgt_data = create_transfer_symmetric_sbm_datasets(**data_args)
+        src_data, tgt_data = create_transfer_symmetric_sbm_datasets(**self.data_args)
 
       case other:
         print('non default dataset experiment')
