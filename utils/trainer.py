@@ -1,6 +1,6 @@
 import numpy as np
 import torch
-from evaluations import eval_cls_preds
+from .evaluations import eval_cls_preds
 
 
 #simple training loop. returns losses
