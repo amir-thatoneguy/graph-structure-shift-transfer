@@ -22,12 +22,12 @@ def plot_results_dict(results, title = ".", legends = [], plot_args = dict()):
   plt.legend(legends)
 
 
-def plot_struct_sweep_histogram(results, experiments_iterator):
-  x, y, z = create_mesh_from_results(results, experiments = experiments, key = 'max_target_accs', aggregator = np.mean)
+def plot_struct_sweep_histogram(results, experiments_iterator, key, subtitle = 'Target Accuracies'):
+  x, y, z = create_mesh_from_results(results, experiments = experiments, key = key, aggregator = np.mean)
 
   plt.subplot(1,2,1)
   plt.scatter(x, y, c=z, cmap = 'magma', s=100)
-  plt.title('Target Accuracies')
+  plt.title(subtitle)
   plt.colorbar()
 
   xlim = x.min() - 0.1, x.max() + 0.1
@@ -38,12 +38,12 @@ def plot_struct_sweep_histogram(results, experiments_iterator):
   plt.xlabel('Source Hemophility')
   plt.ylabel('Target Hemophility')
 
-  x, y, z_std = create_mesh_from_results(results, experiments = experiments, key = 'max_target_accs', aggregator = np.std)
+  x, y, z_std = create_mesh_from_results(results, experiments = experiments, key = key, aggregator = np.std)
 
 
   plt.subplot(1,2,2)
   plt.scatter(x, y, c=z_std, cmap = 'magma', s = 100)
-  plt.title('Target Accuracies (STD)')
+  plt.title(subtitle + ' (STD)')
   plt.colorbar()
 
   xlim = x.min() - 0.1, x.max() + 0.1
