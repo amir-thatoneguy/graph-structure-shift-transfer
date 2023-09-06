@@ -22,7 +22,7 @@ def plot_results_dict(results, title = ".", legends = [], plot_args = dict()):
   plt.legend(legends)
 
 
-def plot_struct_sweep_histogram(results, experiments_iterator, key, subtitle = 'Target Accuracies'):
+def plot_struct_sweep_histogram(results, experiments, key, subtitle = 'Target Accuracies'):
   x, y, z = create_mesh_from_results(results, experiments = experiments, key = key, aggregator = np.mean)
 
   plt.subplot(1,2,1)
