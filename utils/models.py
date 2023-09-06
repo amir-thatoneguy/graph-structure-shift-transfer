@@ -66,7 +66,29 @@ class GAT(torch.nn.Module):
         return y_class, y_domain
 
 
+class GSAGE(torch.nn.Module):
+    """Graph Sage"""
+    def __init__(self, in_channels = 2, hidden_channels = 8, out_channels = 2, dann_lambda = 0.5):
+        super().__init__()
+        self.conv1 = SAGEConv(in_channels = in_channels, out_channels = hidden_channels)
+        self.conv2 = SAGEConv(in_channels = hidden_channels, out_channels = out_channels)
+        self.domain_classifier = GATv2Conv(hidden_channels, 2)
+        self.dann_lambda = dann_lambda
 
+
+    def forward(self, x, edge_index):
+        h = F.dropout(x, p=0.5, training=self.training)
+        h = self.conv1(h, edge_index)
+        h = F.relu(h)
+        h = F.dropout(h, p=0.5, training=self.training)
+        y_class = self.conv2(h, edge_index)
+
+        reverse_feature = ReverseLayerF.apply(h, self.dann_lambda)
+        y_domain = self.domain_classifier(reverse_feature, edge_index)
+
+        return y_class, y_domain
+
+    
 
 
 def create_model(model_args):
@@ -79,7 +101,10 @@ def create_model(model_args):
     case 'GAT':
       model = GAT(**model_args['model_hyperparams'])
 
+    case 'GSAGE':
+        model = GSAGE(**model_args['model_hyperparams'])
+        
     case other:
       print('model type is non-default!')
-
+    
   return model
