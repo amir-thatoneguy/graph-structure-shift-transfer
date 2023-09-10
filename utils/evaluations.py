@@ -35,8 +35,8 @@ def plot_struct_sweep_histogram(results, experiments, key, subtitle = 'Target Ac
 
   plt.xlim(xlim)
   plt.ylim(ylim)
-  plt.xlabel('Source Hemophility')
-  plt.ylabel('Target Hemophility')
+  plt.xlabel('Source Hemophily')
+  plt.ylabel('Target Hemophily')
 
   x, y, z_std = create_mesh_from_results(results, experiments = experiments, key = key, aggregator = np.std)
 
@@ -51,8 +51,8 @@ def plot_struct_sweep_histogram(results, experiments, key, subtitle = 'Target Ac
 
   plt.xlim(xlim)
   plt.ylim(ylim)
-  plt.xlabel('Source Hemophility')
-  plt.ylabel('Target Hemophility')
+  plt.xlabel('Source Hemophily')
+  plt.ylabel('Target Hemophily')
 
 
 def create_mesh_from_results(results, experiments, key = '', aggregator = np.mean):
