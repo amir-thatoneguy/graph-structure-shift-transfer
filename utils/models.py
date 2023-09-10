@@ -72,7 +72,7 @@ class GSAGE(torch.nn.Module):
         super().__init__()
         self.conv1 = SAGEConv(in_channels = in_channels, out_channels = hidden_channels)
         self.conv2 = SAGEConv(in_channels = hidden_channels, out_channels = out_channels)
-        self.domain_classifier = GATv2Conv(hidden_channels, 2)
+        self.domain_classifier = SAGEConv(hidden_channels, 2)
         self.dann_lambda = dann_lambda
 
 
