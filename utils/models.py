@@ -7,6 +7,7 @@ from torch_geometric.nn import GCNConv
 from torch_geometric.nn import GATv2Conv
 from torch_geometric.nn import SAGEConv
 
+
 class ReverseLayerF(Function):
     @staticmethod
     def forward(ctx, x, alpha):
@@ -26,8 +27,10 @@ class GCN(torch.nn.Module):
     def __init__(self, hidden_channels, num_features, num_classes, dann_lambda = 0.5):
         super().__init__()
         self.conv1 = GCNConv(num_features, hidden_channels)
-        self.conv2 = GCNConv(hidden_channels, num_classes)
-        self.domain_classifier = GCNConv(hidden_channels, 2)
+        # self.conv2 = GCNConv(hidden_channels, num_classes)
+        self.classifier = nn.Linear(hidden_channels, num_classes)
+        # self.domain_classifier = GCNConv(hidden_channels, 2)
+        self.domain_classifier = nn.Linear(hidden_channels, 2)
         self.dann_lambda = dann_lambda
 
     def forward(self, x, edge_index):
@@ -35,7 +38,7 @@ class GCN(torch.nn.Module):
         x = x.relu()
         x = F.dropout(x, p=0.5, training=self.training)
 
-        y_class = self.conv2(x, edge_index)
+        y_class = self.classifier(x, edge_index)
 
         reverse_feature = ReverseLayerF.apply(x, self.dann_lambda)
         y_domain = self.domain_classifier(reverse_feature, edge_index)
@@ -48,8 +51,10 @@ class GAT(torch.nn.Module):
     def __init__(self, dim_in, dim_h, dim_out, heads=8, dann_lambda = 0.5):
         super().__init__()
         self.gat1 = GATv2Conv(dim_in, dim_h, heads=heads)
-        self.gat2 = GATv2Conv(dim_h*heads, dim_out, heads=1)
-        self.domain_classifier = GATv2Conv(dim_h*heads, 2, heads=1)
+        # self.gat2 = GATv2Conv(dim_h*heads, dim_out, heads=1)
+        self.classifier = nn.Linear(dim_h*heads, 2)
+        # self.domain_classifier = GATv2Conv(dim_h*heads, 2, heads=1)
+        self.domain_classifier = nn.Linear(dim_h*heads, 2)
         self.dann_lambda = dann_lambda
 
 
@@ -58,7 +63,7 @@ class GAT(torch.nn.Module):
         h = self.gat1(h, edge_index)
         h = F.relu(h)
         h = F.dropout(h, p=0.5, training=self.training)
-        y_class = self.gat2(h, edge_index)
+        y_class = self.classifier(h, edge_index)
 
         reverse_feature = ReverseLayerF.apply(h, self.dann_lambda)
         y_domain = self.domain_classifier(reverse_feature, edge_index)
@@ -71,8 +76,10 @@ class GSAGE(torch.nn.Module):
     def __init__(self, in_channels = 2, hidden_channels = 8, out_channels = 2, dann_lambda = 0.5):
         super().__init__()
         self.conv1 = SAGEConv(in_channels = in_channels, out_channels = hidden_channels)
-        self.conv2 = SAGEConv(in_channels = hidden_channels, out_channels = out_channels)
-        self.domain_classifier = SAGEConv(hidden_channels, 2)
+        # self.classifier = SAGEConv(in_channels = hidden_channels, out_channels = out_channels)
+        # self.domain_classifier = SAGEConv(hidden_channels, 2)
+        self.classifier = nn.Linear(hidden_channels, out_channels)
+        self.domain_classifier = nn.Linear(hidden_channels, 2) 
         self.dann_lambda = dann_lambda
 
 
@@ -81,7 +88,7 @@ class GSAGE(torch.nn.Module):
         h = self.conv1(h, edge_index)
         h = F.relu(h)
         h = F.dropout(h, p=0.5, training=self.training)
-        y_class = self.conv2(h, edge_index)
+        y_class = self.classifier(h, edge_index)
 
         reverse_feature = ReverseLayerF.apply(h, self.dann_lambda)
         y_domain = self.domain_classifier(reverse_feature, edge_index)
