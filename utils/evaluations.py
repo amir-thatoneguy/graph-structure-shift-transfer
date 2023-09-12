@@ -28,6 +28,7 @@ def plot_struct_sweep_histogram(results, experiments, key, subtitle = 'Target Ac
   plt.subplot(1,2,1)
   plt.scatter(x, y, c=z, cmap = 'magma', s=100)
   plt.title(subtitle)
+  plt.clim(0.5, 1)
   plt.colorbar()
 
   xlim = x.min() - 0.1, x.max() + 0.1
