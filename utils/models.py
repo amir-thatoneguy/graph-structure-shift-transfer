@@ -35,11 +35,12 @@ class GCN(torch.nn.Module):
 
     def forward(self, x, edge_index):
         x = self.conv1(x, edge_index)
-        x = x.relu()
+        x = F.relu(x)
         x = F.dropout(x, p=0.5, training=self.training)
 
-        y_class = self.classifier(x, edge_index)
-
+        # y_class = self.classifier(x, edge_index)
+        y_class = self.classifier(x)
+        
         reverse_feature = ReverseLayerF.apply(x, self.dann_lambda)
         y_domain = self.domain_classifier(reverse_feature, edge_index)
 
@@ -63,8 +64,10 @@ class GAT(torch.nn.Module):
         h = self.gat1(h, edge_index)
         h = F.relu(h)
         h = F.dropout(h, p=0.5, training=self.training)
-        y_class = self.classifier(h, edge_index)
-
+        
+        # y_class = self.classifier(h, edge_index)
+        y_class = self.classifier(h)
+        
         reverse_feature = ReverseLayerF.apply(h, self.dann_lambda)
         y_domain = self.domain_classifier(reverse_feature, edge_index)
 
@@ -88,8 +91,10 @@ class GSAGE(torch.nn.Module):
         h = self.conv1(h, edge_index)
         h = F.relu(h)
         h = F.dropout(h, p=0.5, training=self.training)
-        y_class = self.classifier(h, edge_index)
-
+        
+        # y_class = self.classifier(h, edge_index)
+        y_class = self.classifier(h)
+        
         reverse_feature = ReverseLayerF.apply(h, self.dann_lambda)
         y_domain = self.domain_classifier(reverse_feature, edge_index)
 
